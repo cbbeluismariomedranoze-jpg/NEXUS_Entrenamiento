@@ -1,0 +1,14 @@
+[OK] 1 Inmersión autorizada y límites de admisión
+[OK] 2 Inmersión rechazada por cada requisito
+[OK] 3 Operaciones de exploración, análisis, consulta y recuperación
+[OK] 4 Entrada ABC, -500 y 99 con recuperación
+[OK] 5 IRIS y desconexión por condición crítica
+[OK] 6 Desconexión voluntaria y bloqueo posterior
+[OK] 7 Límite 100 y reservas agotadas
+[OK] 8 Energía insuficiente sin mutación
+[OK] 9 Regla élite e historial de exploración
+[OK] 10 Fin de entrada genera excepción controlable
+[OK] 11 Sesión completa con entradas redirigidas y menú repetido
+[OK] 12 Estado inválido rechazado por el modelo
+
+RESULTADO: 12 aprobadas; 0 fallidas.
