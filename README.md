@@ -58,7 +58,19 @@ Los conceptos de herencia, polimorfismo, interfaces y LINQ se desarrollan como e
 
 ## Documentación
 
-El manual técnico y los diagramas del Hito 3 se incorporarán a la carpeta `docs/`.
+## Documentación del proyecto
+
+El proyecto **NEXUS_Entrenamiento** cuenta con documentación técnica y evidencias de funcionamiento.
+
+En la carpeta `Docs` se encuentran:
+
+- **NEXUS_Documentacion.pdf:** documentación técnica del proyecto.
+- **Evidencia_Pruebas_NEXUS.png:** captura de los resultados de las pruebas automatizadas.
+- **README.md:** información de la documentación.
+
+El sistema fue desarrollado en **C# con Visual Studio** y cuenta con seis operaciones funcionales.
+
+Se ejecutaron **12 pruebas automatizadas**, obteniendo 12 aprobadas y 0 fallidas.
 
 ## Autor
 
