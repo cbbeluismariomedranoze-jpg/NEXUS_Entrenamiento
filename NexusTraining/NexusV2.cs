@@ -89,6 +89,8 @@ internal sealed class MundoNexus
     private readonly Random azar = new();
     private readonly string[] zonas = { "Base de extracción", "Bosque de ecos", "Ruinas orbitales", "Zona de anomalía" };
     private readonly bool[] visitadas = new bool[4];
+    private bool robotSuperado;
+    private bool enemigoSuperado;
     public Cadete Jugador { get; }
     public Mision Mision { get; } = new();
     public int Zona { get; private set; }
@@ -121,9 +123,9 @@ internal sealed class MundoNexus
             else if (Zona == 3)
             { Jugador.Mochila.Agregar(TipoObjeto.Nucleo); Mision.NucleoEncontrado = true; mensaje += " ANOMALÍA DETECTADA: núcleo energético recuperado."; }
         }
-        if (Zona == 2 && !Mision.EncuentroSuperado) { Encuentro = new Robot(); mensaje += " ENTIDAD DETECTADA: robot."; }
-        if (Zona == 3 && !Mision.EncuentroSuperado) { Encuentro = new Enemigo(); mensaje += " ENTIDAD DETECTADA: enemigo."; }
-        if (Zona == 3 && Mision.EncuentroSuperado == false && Encuentro == null) Encuentro = new Enemigo();
+        if (Zona == 2 && !robotSuperado) { Encuentro = new Robot(); mensaje += " ENTIDAD DETECTADA: robot."; }
+        if (Zona == 3 && !enemigoSuperado) { Encuentro = new Enemigo(); mensaje += " ENTIDAD DETECTADA: enemigo."; }
+        
         if (Zona == 0 && Mision.Finalizar(Jugador, Zona)) mensaje += " MISIÓN COMPLETADA: +100 XP y módulo desconocido.";
         return mensaje;
     }
@@ -147,7 +149,9 @@ internal sealed class MundoNexus
             if (!Encuentro.Vivo)
             {
                 string nombre = Encuentro.Nombre;
-                Encuentro = null; Mision.EncuentroSuperado = true;
+                if (Encuentro is Robot) robotSuperado = true;
+                if (Encuentro is Enemigo) { enemigoSuperado = true; Mision.EncuentroSuperado = true; }
+                Encuentro = null;
                 return $"Has vencido a {nombre}. Objetivo de encuentro superado.";
             }
             Jugador.RecibirDanio(Encuentro is Robot ? 8 : 14);
