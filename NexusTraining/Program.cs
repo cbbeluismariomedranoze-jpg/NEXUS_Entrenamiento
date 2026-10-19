@@ -10,6 +10,7 @@ internal static class Program
         try
         {
             if (args.Contains("--pruebas")) return Pruebas.Ejecutar();
+            if (args.Contains("--v2")) { NexusV2.Ejecutar(); return 0; }
             EjecutarSesion();
             return 0;
         }
