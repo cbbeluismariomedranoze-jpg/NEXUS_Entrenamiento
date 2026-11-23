@@ -6,7 +6,7 @@ namespace NexusWindowsForms;
 
 public sealed class MainForm : Form
 {
-    private readonly Label statusLabel;
+    private Label statusLabel;
 
     public MainForm()
     {
