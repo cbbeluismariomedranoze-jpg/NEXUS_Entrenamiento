@@ -1,81 +1,74 @@
-# 🚀 NEXUS — Academia de Exploradores
+# NEXUS — Academia de Exploradores
 
-## Descripción del proyecto
+NEXUS es una aventura de ciencia ficción en C# ambientada en el año 2297. El jugador interpreta a un cadete que explora realidades, administra recursos, investiga anomalías de IRIS y resuelve misiones.
 
-NEXUS es un videojuego de consola desarrollado en C# con Visual Studio para la materia de Programación II, Hito 3.
+> **Estado actual:** el código H3 es una aplicación de consola en .NET 8. Windows Forms y SQL Server forman parte de la arquitectura propuesta y todavía deben implementarse.
 
-La historia se desarrolla en el año 2297. El jugador asume el papel de un cadete explorador que debe ingresar a una realidad desconocida, administrar su energía y estabilidad, explorar ecos temporales y tomar decisiones para completar su entrenamiento.
+## Funcionalidades implementadas en H3
 
-## Objetivo
+- Registro y validación de datos del cadete.
+- Entrenamiento de ecos temporales, energía, estabilidad, fragmentos de IRIS y celdas de reserva.
+- Alertas de anomalía y desconexión automática por estado crítico.
+- Modo de misión disponible mediante `--v2`: mapa de cuatro zonas, exploración, encuentros, inventario, objetos, experiencia y misión “La anomalía perdida”.
+- Pruebas automatizadas ejecutables mediante `--pruebas`.
 
-Aplicar conceptos de programación en C# mediante un sistema interactivo que permita controlar el estado de un explorador y responder a diferentes situaciones.
+## Tecnologías actuales
 
-## Funcionalidades principales
-
-- Registro del cadete y validación de ingreso.
-- Exploración de ecos temporales.
-- Decodificación de señales de IRIS.
-- Consulta del estado del explorador.
-- Recuperación de energía mediante celdas.
-- Recalibración de estabilidad.
-- Alertas de anomalías y desconexión automática.
-- Pruebas automatizadas del funcionamiento.
-
-## Tecnologías utilizadas
-
-- C#
-- .NET 8
+- C# y .NET 8
 - Visual Studio
 - Git y GitHub
 
-## Estructura del proyecto
+## Requisitos y ejecución
 
-- `Program.cs`: inicia el programa, recibe datos y muestra el menú.
-- `Simulacion.cs`: administra las reglas y el estado del entrenamiento.
-- `Pruebas.cs`: contiene 12 pruebas automatizadas.
-- `NexusTraining.csproj`: configuración del proyecto.
-- `NEXUS_Entrenamiento.sln`: solución de Visual Studio.
-
-## Cómo ejecutar NEXUS
-
-1. Descargar o clonar el repositorio.
-2. Abrir `NEXUS_Entrenamiento.sln` en Visual Studio.
-3. Tener instalado el SDK de .NET 8.
-4. Presionar `F5` o el botón de iniciar.
-5. Ingresar los datos del cadete y seleccionar las operaciones del menú.
-
-Para ejecutar las pruebas desde la carpeta raíz del repositorio:
+Instalar el SDK de .NET 8 o Visual Studio con soporte para ese SDK. Clonar el repositorio:
 
 ```bash
+git clone https://github.com/cbbeluismariomedranoze-jpg/NEXUS_Entrenamiento.git
+cd NEXUS_Entrenamiento
+```
+
+Abrir `NEXUS_Entrenamiento.sln` en Visual Studio y ejecutar con F5 o Ctrl+F5. También puede usarse la terminal:
+
+```bash
+# Modo de entrenamiento H3
+dotnet run --project NexusTraining
+
+# Misión "La anomalía perdida"
+dotnet run --project NexusTraining -- --v2
+
+# Pruebas automatizadas
 dotnet run --project NexusTraining -- --pruebas
 ```
 
-## Conceptos de Programación II
+## Estructura relevante
 
-El proyecto utiliza clases, objetos, constructores, encapsulamiento, propiedades, métodos, colecciones genéricas, expresiones lambda, eventos y manejo de excepciones.
+- `NexusTraining/Program.cs`: punto de entrada, menús de consola y validación de entrada.
+- `NexusTraining/Simulacion.cs`: reglas del entrenamiento, energía, estabilidad y eventos IRIS.
+- `NexusTraining/NexusV2.cs`: personajes, inventario, misión, mapa y modo de consola de la misión.
+- `NexusTraining/Pruebas.cs`: pruebas automatizadas.
+- `NexusTraining/NexusTraining.csproj`: configuración del proyecto .NET 8.
+- `docs/`: documentación técnica, diseño de juego, diagramas y wireframes.
 
-Los conceptos de herencia, polimorfismo, interfaces y LINQ se desarrollan como ejemplos complementarios en el manual técnico.
+## Documentación de esta evolución
 
-## Documentación
+1. [Diseño del videojuego](docs/diseno-del-juego.md): visión, ciclo, reglas, pantallas, UX y alcance.
+2. [Arquitectura actual](docs/arquitectura-actual.md): archivos, clases, funcionalidades y limitaciones reales de H3.
+3. [Arquitectura propuesta](docs/arquitectura-propuesta.md): capas, componentes, diagramas y plan de migración.
+4. [Modelo de datos propuesto](docs/modelo-de-datos-propuesto.md): entidades, relaciones y estrategia de persistencia SQL Server.
+5. [Análisis técnico](docs/analisis-tecnico.md): alternativas, decisiones, riesgos, verificación de IA y fuentes.
+6. [Bocetos y diagramas](docs/evidencias/bocetos-y-diagramas.md): cuatro pantallas esquemáticas y navegación.
 
-## Documentación del proyecto
+## Próximas etapas
 
-El proyecto **NEXUS_Entrenamiento** cuenta con documentación técnica y evidencias de funcionamiento.
+1. Ejecutar y preservar las pruebas de regresión.
+2. Separar las clases del archivo `NexusV2.cs` sin alterar reglas.
+3. Crear servicios de aplicación y formularios Windows Forms.
+4. Implementar el esquema SQL Server y un repositorio para guardar/cargar partidas.
+5. Probar el recorrido completo, desde iniciar partida hasta guardar y continuar.
 
-En la carpeta `Docs` se encuentran:
-
-- **NEXUS_Documentacion.pdf:** documentación técnica del proyecto.
-- **Evidencia_Pruebas_NEXUS.png:** captura de los resultados de las pruebas automatizadas.
-- **README.md:** información de la documentación.
-
-El sistema fue desarrollado en **C# con Visual Studio** y cuenta con seis operaciones funcionales.
-
-Se ejecutaron **12 pruebas automatizadas**, obteniendo 12 aprobadas y 0 fallidas.
+No se debe guardar ninguna contraseña ni cadena de conexión privada en el repositorio. La base de datos y la interfaz gráfica aún no forman parte del código H3 publicado.
 
 ## Autor
 
-Luis Mario Medrano Zeballos
-
-Carrera: Ingeniería en Sistemas
-
+Luis Mario Medrano Zeballos  
 Materia: Programación II
