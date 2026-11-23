@@ -72,3 +72,34 @@ No se debe guardar ninguna contraseña ni cadena de conexión privada en el repo
 
 Luis Mario Medrano Zeballos  
 Materia: Programación II
+
+## H4.01 — Primera interfaz gráfica Windows Forms
+
+La solución existente ahora incluye el proyecto `NexusWindowsForms` junto con el proyecto de consola `NexusTraining`. No se reemplazó la versión de consola.
+
+### Ejecutar la interfaz gráfica
+
+Requisito: Windows y .NET 8 SDK con soporte para `net8.0-windows`.
+
+1. Abrir `NEXUS_Entrenamiento.sln` en Visual Studio.
+2. En el Explorador de soluciones, hacer clic derecho en `NexusWindowsForms` y elegir **Establecer como proyecto de inicio**.
+3. Ejecutar con F5.
+4. Desde el menú, usar **Iniciar entrenamiento** o **La anomalía perdida** para abrir el modo de consola original. El botón de documentación abre los documentos publicados en GitHub.
+
+También se puede ejecutar desde la terminal de Windows:
+
+```powershell
+dotnet build NEXUS_Entrenamiento.sln
+dotnet run --project NexusWindowsForms/NexusWindowsForms.csproj
+```
+
+Para ejecutar la consola original:
+
+```powershell
+dotnet run --project NexusTraining/NexusTraining.csproj
+dotnet run --project NexusTraining/NexusTraining.csproj -- --v2
+dotnet run --project NexusTraining/NexusTraining.csproj -- --pruebas
+```
+
+**Nota de validación:** los archivos se han publicado en el repositorio; antes de entregar, compilar y ejecutar en Visual Studio en Windows y realizar la clonación limpia exigida por la práctica. Las capturas del laboratorio deben ser reales, con fecha y hora visibles.
+
