@@ -4,25 +4,51 @@ using System.Linq;
 
 namespace NexusTraining;
 
-internal abstract class Personaje
+
+public abstract class Personaje
 {
     public string Nombre { get; }
     public int Vida { get; protected set; }
     public int Energia { get; protected set; }
+
     protected Personaje(string nombre, int vida, int energia)
-    { Nombre = nombre; Vida = vida; Energia = energia; }
+    {
+        Nombre = nombre;
+        Vida = vida;
+        Energia = energia;
+    }
+
     public bool Vivo => Vida > 0;
-    public virtual string Describir() => $"{Nombre} | Vida {Vida} | Energía {Energia}";
-    public virtual void RecibirDanio(int cantidad) => Vida = Math.Max(0, Vida - Math.Max(0, cantidad));
+
+    public void RestaurarPersonaje(int vida, int energia)
+    {
+        Vida = Math.Max(0, vida);
+        Energia = Math.Max(0, energia);
+    }
+
+    public virtual string Describir() =>
+        $"{Nombre} | Vida {Vida} | Energía {Energia}";
+
+    public virtual void RecibirDanio(int cantidad) =>
+        Vida = Math.Max(0, Vida - Math.Max(0, cantidad));
 }
 
-internal sealed class Cadete : Personaje
+
+public sealed class Cadete : Personaje
 {
     public int Experiencia { get; private set; }
     public int Escudo { get; private set; }
     public int AtaqueExtra { get; private set; }
     public Inventario Mochila { get; } = new();
     public Cadete(string nombre) : base(nombre, 100, 70) { }
+    public void RestaurarEstado(int vida, int energia, int experiencia, int escudo, int ataqueExtra)
+    {
+        Vida = Math.Clamp(vida, 0, 100);
+        Energia = Math.Clamp(energia, 0, 100);
+        Experiencia = Math.Max(0, experiencia);
+        Escudo = Math.Max(0, escudo);
+        AtaqueExtra = Math.Max(0, ataqueExtra);
+    }
     public override void RecibirDanio(int cantidad)
     {
         int absorbido = Math.Min(Escudo, Math.Max(0, cantidad));
@@ -41,50 +67,87 @@ internal sealed class Cadete : Personaje
     public void DarExperiencia(int puntos) => Experiencia += puntos;
     public override string Describir() => base.Describir() + $" | Escudo {Escudo} | XP {Experiencia}";
 }
-internal sealed class Robot : Personaje
+public sealed class Robot : Personaje
 {
     public Robot() : base("Robot centinela", 45, 35) { }
     public override string Describir() => base.Describir() + " | Defensa automática";
 }
-internal sealed class Enemigo : Personaje
+public sealed class Enemigo : Personaje
 {
     public Enemigo() : base("Entidad hostil", 55, 45) { }
     public override string Describir() => base.Describir() + " | Hostil";
 }
-internal enum TipoObjeto { Celula, Escudo, ModuloAtaque, Analizador, Nucleo, ModuloDesconocido }
-internal sealed class Inventario
+public enum TipoObjeto { Celula, Escudo, ModuloAtaque, Analizador, Nucleo, ModuloDesconocido }
+
+public sealed class Inventario
 {
-    private readonly Dictionary<TipoObjeto,int> objetos = new();
+    private readonly Dictionary<TipoObjeto, int> objetos = new();
+
     public int Cantidad(TipoObjeto tipo) => objetos.GetValueOrDefault(tipo);
+
     public void Agregar(TipoObjeto tipo, int cantidad = 1)
-    { if (cantidad > 0) objetos[tipo] = Cantidad(tipo) + cantidad; }
+    {
+        if (cantidad > 0)
+            objetos[tipo] = Cantidad(tipo) + cantidad;
+    }
+
     public bool Quitar(TipoObjeto tipo)
     {
         if (Cantidad(tipo) == 0) return false;
+
         objetos[tipo]--;
-        if (objetos[tipo] == 0) objetos.Remove(tipo);
+
+        if (objetos[tipo] == 0)
+            objetos.Remove(tipo);
+
         return true;
     }
+
+    public void Restaurar(TipoObjeto tipo, int cantidad)
+    {
+        if (cantidad > 0)
+            objetos[tipo] = cantidad;
+        else
+            objetos.Remove(tipo);
+    }
+
     public string Ver() => objetos.Count == 0 ? "Inventario vacío." :
         string.Join(", ", objetos.Select(x => $"{x.Key}: {x.Value}"));
 }
-internal sealed class Mision
+
+
+public sealed class Mision
 {
     public bool ZonaAlcanzada { get; set; }
     public bool NucleoEncontrado { get; set; }
     public bool EncuentroSuperado { get; set; }
     public bool Completada { get; private set; }
-    public string Estado() => $"La anomalía perdida | Zona: {ZonaAlcanzada} | Núcleo: {NucleoEncontrado} | Encuentro: {EncuentroSuperado} | Completada: {Completada}";
+
+    public void Restaurar(bool zona, bool nucleo, bool encuentro, bool completada)
+    {
+        ZonaAlcanzada = zona;
+        NucleoEncontrado = nucleo;
+        EncuentroSuperado = encuentro;
+        Completada = completada;
+    }
+
+    public string Estado() =>
+        $"La anomalía perdida | Zona: {ZonaAlcanzada} | Núcleo: {NucleoEncontrado} | Encuentro: {EncuentroSuperado} | Completada: {Completada}";
+
     public bool Finalizar(Cadete cadete, int zona)
     {
-        if (Completada || zona != 0 || !ZonaAlcanzada || !NucleoEncontrado || !EncuentroSuperado || !cadete.Vivo) return false;
+        if (Completada || zona != 0 || !ZonaAlcanzada ||
+            !NucleoEncontrado || !EncuentroSuperado || !cadete.Vivo)
+            return false;
+
         Completada = true;
         cadete.DarExperiencia(100);
         cadete.Mochila.Agregar(TipoObjeto.ModuloDesconocido);
         return true;
     }
 }
-internal sealed class MundoNexus
+
+public sealed class MundoNexus
 {
     private readonly Random azar = new();
     private readonly string[] zonas = { "Base de extracción", "Bosque de ecos", "Ruinas orbitales", "Zona de anomalía" };
@@ -96,6 +159,14 @@ internal sealed class MundoNexus
     public int Zona { get; private set; }
     public Personaje? Encuentro { get; private set; }
     public bool Terminado { get; private set; }
+    public bool RobotSuperado => robotSuperado;
+
+    public bool EnemigoSuperado => enemigoSuperado;
+
+    public bool[] ObtenerZonasVisitadas()
+    {
+        return (bool[])visitadas.Clone();
+    }
     public MundoNexus(string nombre)
     {
         Jugador = new Cadete(nombre);
@@ -103,6 +174,61 @@ internal sealed class MundoNexus
         Jugador.Mochila.Agregar(TipoObjeto.Analizador);
         visitadas[0] = true;
     }
+
+    public void RestaurarPartida(
+        int vida, int energia, int experiencia,
+        int escudo, int ataqueExtra, int zona,
+        bool terminado, bool robotSuperado, bool enemigoSuperado,
+        int? tipoEncuentro, int? vidaEncuentro, int? energiaEncuentro,
+        bool zonaAlcanzada, bool nucleoEncontrado,
+        bool encuentroSuperado, bool completada,
+        Dictionary<TipoObjeto, int> inventario,
+        bool[] zonasVisitadas)
+    {
+        Jugador.RestaurarEstado(
+            vida, energia, experiencia, escudo, ataqueExtra);
+
+        Zona = Math.Clamp(zona, 0, 3);
+        Terminado = terminado;
+        this.robotSuperado = robotSuperado;
+        this.enemigoSuperado = enemigoSuperado;
+
+        Mision.Restaurar(
+            zonaAlcanzada, nucleoEncontrado,
+            encuentroSuperado, completada);
+
+        for (int i = 0; i < visitadas.Length; i++)
+        {
+            visitadas[i] = i < zonasVisitadas.Length
+                && zonasVisitadas[i];
+        }
+
+        foreach (TipoObjeto tipo in Enum.GetValues<TipoObjeto>())
+        {
+            Jugador.Mochila.Restaurar(
+                tipo, inventario.GetValueOrDefault(tipo));
+        }
+
+        Encuentro = null;
+
+        if (tipoEncuentro == 1)
+        {
+            var robot = new Robot();
+            robot.RestaurarPersonaje(
+                vidaEncuentro ?? 45,
+                energiaEncuentro ?? 35);
+            Encuentro = robot;
+        }
+        else if (tipoEncuentro == 2)
+        {
+            var enemigo = new Enemigo();
+            enemigo.RestaurarPersonaje(
+                vidaEncuentro ?? 55,
+                energiaEncuentro ?? 45);
+            Encuentro = enemigo;
+        }
+    }
+
     public string Mover(int destino)
     {
         if (Encuentro != null) return "Primero resuelve el encuentro (atacar, escapar o analizar).";
