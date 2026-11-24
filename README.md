@@ -1,105 +1,174 @@
 # NEXUS — Academia de Exploradores
 
-NEXUS es una aventura de ciencia ficción en C# ambientada en el año 2297. El jugador interpreta a un cadete que explora realidades, administra recursos, investiga anomalías de IRIS y resuelve misiones.
+NEXUS es un videojuego de ciencia ficción desarrollado en C# y .NET 8, ambientado en el año 2297. El jugador interpreta a un cadete que explora diferentes realidades, administra recursos, investiga anomalías mediante IRIS y completa misiones.
 
-> **Estado actual:** el código H3 es una aplicación de consola en .NET 8. Windows Forms y SQL Server forman parte de la arquitectura propuesta y todavía deben implementarse.
+## Estado actual del proyecto — Hito 4
 
-## Funcionalidades implementadas en H3
+El proyecto cuenta con una aplicación de consola, una interfaz gráfica desarrollada con Windows Forms y un sistema de memoria persistente conectado a SQL Server.
 
-- Registro y validación de datos del cadete.
-- Entrenamiento de ecos temporales, energía, estabilidad, fragmentos de IRIS y celdas de reserva.
-- Alertas de anomalía y desconexión automática por estado crítico.
-- Modo de misión disponible mediante `--v2`: mapa de cuatro zonas, exploración, encuentros, inventario, objetos, experiencia y misión “La anomalía perdida”.
-- Pruebas automatizadas ejecutables mediante `--pruebas`.
+La finalidad del Hito 4 es permitir que el progreso del jugador permanezca almacenado incluso después de cerrar completamente la aplicación.
 
-## Tecnologías actuales
+## Funcionalidades implementadas
 
-- C# y .NET 8
+### Videojuego
+- Registro y validación del cadete.
+- Administración de vida, energía y experiencia.
+- Exploración de cuatro zonas.
+- Encuentros con entidades.
+- Inventario y utilización de objetos.
+- Sistema de misiones y progreso.
+- Interacción con IRIS.
+
+### Interfaz gráfica Windows Forms
+- Menú principal de NEXUS.
+- Creación de nuevas partidas.
+- Consulta de partidas guardadas.
+- Carga y continuación de partidas.
+- Guardado manual y automático del progreso.
+- Eliminación de partidas.
+- Comprobación de conexión con SQL Server.
+
+### Memoria persistente
+- Registro de cadetes.
+- Almacenamiento de partidas.
+- Recuperación del estado del jugador.
+- Persistencia del inventario.
+- Almacenamiento de zonas visitadas.
+- Recuperación del progreso de las misiones.
+- Conservación del estado de los encuentros.
+
+Se realizaron pruebas cerrando y abriendo nuevamente la aplicación para comprobar la recuperación de los datos almacenados.
+
+## Tecnologías utilizadas
+
+- C#
+- .NET 8
+- Windows Forms
+- Microsoft SQL Server Express
+- SQL Server Management Studio (SSMS)
+- Microsoft.Data.SqlClient
 - Visual Studio
 - Git y GitHub
 
-## Requisitos y ejecución
+## Base de datos NEXUS_DB
 
-Instalar el SDK de .NET 8 o Visual Studio con soporte para ese SDK. Clonar el repositorio:
+La base de datos contiene seis tablas relacionadas:
+
+| Tabla | Función |
+|---|---|
+| Cadetes | Información de los exploradores |
+| Partidas | Estado y recursos de cada partida |
+| Objetos | Catálogo de objetos del juego |
+| InventarioPartida | Objetos y cantidades de cada partida |
+| ProgresoMision | Estado de las misiones |
+| ZonasVisitadas | Registro de zonas exploradas |
+
+Se utilizan claves primarias, claves foráneas, restricciones y relaciones para mantener la integridad de los datos.
+
+## Requisitos de instalación
+
+- Windows.
+- .NET 8 SDK.
+- Visual Studio con soporte para Windows Forms.
+- SQL Server Express.
+- SQL Server Management Studio.
+
+La aplicación utiliza autenticación de Windows para conectarse a la instancia local de SQL Server.
+
+La cadena de conexión debe corresponder a la instancia configurada en cada equipo.
+
+## Instalación y ejecución
+
+Clonar el repositorio:
 
 ```bash
 git clone https://github.com/cbbeluismariomedranoze-jpg/NEXUS_Entrenamiento.git
-cd NEXUS_Entrenamiento
 ```
 
-Abrir `NEXUS_Entrenamiento.sln` en Visual Studio y ejecutar con F5 o Ctrl+F5. También puede usarse la terminal:
+Abrir el archivo `NEXUS_Entrenamiento.sln` en Visual Studio.
+
+### Configurar la base de datos
+
+1. Abrir SQL Server Management Studio.
+2. Conectarse a la instancia de SQL Server.
+3. Crear la base de datos `NEXUS_DB`.
+4. Ejecutar el script de creación de tablas y datos iniciales.
+5. Verificar la cadena de conexión en `ConexionBD.cs`.
+
+### Ejecutar Windows Forms
+
+1. Abrir el Explorador de soluciones.
+2. Seleccionar `NexusWindowsForms`.
+3. Establecerlo como proyecto de inicio.
+4. Ejecutar con F5.
+
+### Ejecutar la versión de consola
 
 ```bash
-# Modo de entrenamiento H3
 dotnet run --project NexusTraining
+```
 
-# Misión "La anomalía perdida"
+Modo de misión:
+
+```bash
 dotnet run --project NexusTraining -- --v2
+```
 
-# Pruebas automatizadas
+Pruebas automatizadas:
+
+```bash
 dotnet run --project NexusTraining -- --pruebas
 ```
 
-## Estructura relevante
+## Estructura del proyecto
 
-- `NexusTraining/Program.cs`: punto de entrada, menús de consola y validación de entrada.
-- `NexusTraining/Simulacion.cs`: reglas del entrenamiento, energía, estabilidad y eventos IRIS.
-- `NexusTraining/NexusV2.cs`: personajes, inventario, misión, mapa y modo de consola de la misión.
+- `NexusTraining/`: lógica principal del videojuego.
+- `NexusTraining/NexusV2.cs`: personajes, inventario, misiones, mapa y encuentros.
+- `NexusTraining/Program.cs`: punto de entrada de la aplicación de consola.
+- `NexusTraining/Simulacion.cs`: reglas del entrenamiento.
 - `NexusTraining/Pruebas.cs`: pruebas automatizadas.
-- `NexusTraining/NexusTraining.csproj`: configuración del proyecto .NET 8.
-- `docs/`: documentación técnica, diseño de juego, diagramas y wireframes.
+- `NexusWindowsForms/`: interfaz gráfica.
+- `NexusWindowsForms/MainForm.cs`: menú principal y gestión de las partidas.
+- `NexusWindowsForms/ConexionBD.cs`: conexión con SQL Server.
+- `NexusWindowsForms/RepositorioNexus.cs`: operaciones de creación, guardado, carga y eliminación de partidas.
+- `docs/`: documentación técnica y diagramas.
 
-## Documentación de esta evolución
+## Prueba de memoria persistente
 
-1. [Diseño del videojuego](docs/diseno-del-juego.md): visión, ciclo, reglas, pantallas, UX y alcance.
-2. [Arquitectura actual](docs/arquitectura-actual.md): archivos, clases, funcionalidades y limitaciones reales de H3.
-3. [Arquitectura propuesta](docs/arquitectura-propuesta.md): capas, componentes, diagramas y plan de migración.
-4. [Modelo de datos propuesto](docs/modelo-de-datos-propuesto.md): entidades, relaciones y estrategia de persistencia SQL Server.
-5. [Análisis técnico](docs/analisis-tecnico.md): alternativas, decisiones, riesgos, verificación de IA y fuentes.
-6. [Bocetos y diagramas](docs/evidencias/bocetos-y-diagramas.md): cuatro pantallas esquemáticas y navegación.
+Se realizaron las siguientes comprobaciones:
 
-## Próximas etapas
+1. Crear una nueva partida.
+2. Modificar la zona y los recursos del jugador.
+3. Guardar el progreso en SQL Server.
+4. Cerrar completamente la aplicación.
+5. Abrir nuevamente NEXUS.
+6. Cargar la partida guardada.
+7. Verificar la recuperación de energía, zona, inventario y progreso.
+8. Comprobar la eliminación de partidas.
 
-1. Ejecutar y preservar las pruebas de regresión.
-2. Separar las clases del archivo `NexusV2.cs` sin alterar reglas.
-3. Crear servicios de aplicación y formularios Windows Forms.
-4. Implementar el esquema SQL Server y un repositorio para guardar/cargar partidas.
-5. Probar el recorrido completo, desde iniciar partida hasta guardar y continuar.
+Los resultados confirmaron que los datos se conservan después de cerrar y volver a abrir la aplicación.
 
-No se debe guardar ninguna contraseña ni cadena de conexión privada en el repositorio. La base de datos y la interfaz gráfica aún no forman parte del código H3 publicado.
+## Documentación del proyecto
+
+1. [Diseño del videojuego](docs/diseno-del-juego.md).
+2. [Arquitectura actual](docs/arquitectura-actual.md).
+3. [Arquitectura propuesta](docs/arquitectura-propuesta.md).
+4. [Modelo de datos](docs/modelo-de-datos-propuesto.md).
+5. [Análisis técnico](docs/analisis-tecnico.md).
+6. [Bocetos y diagramas](docs/evidencias/bocetos-y-diagramas.md).
+
+## Seguridad
+
+No se deben publicar contraseñas, credenciales ni datos privados de conexión. Cada usuario debe configurar su propia instancia de SQL Server.
 
 ## Autor
 
-Luis Mario Medrano Zeballos  
+**Luis Mario Medrano Zeballos**
+
 Materia: Programación II
 
-## H4.01 — Primera interfaz gráfica Windows Forms
+---
 
-La solución existente ahora incluye el proyecto `NexusWindowsForms` junto con el proyecto de consola `NexusTraining`. No se reemplazó la versión de consola.
+**NEXUS — Hito 4: Operación Memoria**
 
-### Ejecutar la interfaz gráfica
-
-Requisito: Windows y .NET 8 SDK con soporte para `net8.0-windows`.
-
-1. Abrir `NEXUS_Entrenamiento.sln` en Visual Studio.
-2. En el Explorador de soluciones, hacer clic derecho en `NexusWindowsForms` y elegir **Establecer como proyecto de inicio**.
-3. Ejecutar con F5.
-4. Desde el menú, usar **Iniciar entrenamiento** o **La anomalía perdida** para abrir el modo de consola original. El botón de documentación abre los documentos publicados en GitHub.
-
-También se puede ejecutar desde la terminal de Windows:
-
-```powershell
-dotnet build NEXUS_Entrenamiento.sln
-dotnet run --project NexusWindowsForms/NexusWindowsForms.csproj
-```
-
-Para ejecutar la consola original:
-
-```powershell
-dotnet run --project NexusTraining/NexusTraining.csproj
-dotnet run --project NexusTraining/NexusTraining.csproj -- --v2
-dotnet run --project NexusTraining/NexusTraining.csproj -- --pruebas
-```
-
-**Nota de validación:** los archivos se han publicado en el repositorio; antes de entregar, compilar y ejecutar en Visual Studio en Windows y realizar la clonación limpia exigida por la práctica. Las capturas del laboratorio deben ser reales, con fecha y hora visibles.
-
+Sistema de exploración con almacenamiento persistente de partidas mediante C#, Windows Forms y SQL Server.
